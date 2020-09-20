@@ -1,16 +1,23 @@
-// Input 0 0, Output 0
-// Input 0 1, Output 1
-// Input 1 0, Output 1
-// Input 1 1, Output 0
+//For these functions you need to have rawData.
 
-const net = new brain.NeuralNetwork({ hiddenLayers: [3] });
+function scaleDown(step){ // Normalize
+    return {
+        open: step.open / 138,
+        high: step.high / 138,
+        low: step.low / 138,
+        close: step.close / 138
+    }
+}
 
-const trainingData = [
-  { input: [0,0], output: [0] },
-  { input: [0,1], output: [1] },
-  { input: [1,0], output: [1] },
-  { input: [1,1], output: [0] }
-];
+console.log(scaleDown(rawData[0]));
 
-net.train(trainingData);
-console.log(net.run([0,0]));
+function scaleUp(step){ // Denormalize
+    return {
+        open: step.open * 138,
+        high: step.high * 138,
+        low: step.low * 138,
+        close: step.close * 138
+    }
+}
+
+console.log(scaleUp(rawData[0]));
