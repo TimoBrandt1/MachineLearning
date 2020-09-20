@@ -1,16 +1,51 @@
-// Input 0 0, Output 0
-// Input 0 1, Output 1
-// Input 1 0, Output 1
-// Input 1 1, Output 0
+const restaurants = {
+  "KFC": "Maandag",
+  "Portofino": "Dinsdag",
+  "Subway": "Woensdag",
+  "BurgerKing": "Donderdag",
+  "McDonalds": "Vrijdag",
+  "Vivaldi": "Zaterdag",
+  "Febo": "Zondag"
+};
 
-const net = new brain.NeuralNetwork({ hiddenLayers: [3] });
+//Input: {Maandag, Dinsdag, Woensdag, etc..}
+//Output: {Restaurant1, Restaurant2, etc..}
 
-const trainingData = [
-  { input: [0,0], output: [0] },
-  { input: [0,1], output: [1] },
-  { input: [1,0], output: [1] },
-  { input: [1,1], output: [0] }
-];
+const trainingData = [];
 
-net.train(trainingData);
-console.log(net.run([0,0]));
+for(let restourantName in restaurants){
+  const dayOfWeek = restaurants[restourantName];
+  trainingData.push({
+    input: { [dayOfWeek]: 1},
+    output: { [restourantName]: 1}
+  });
+}
+
+const net = new brain.NeuralNetwork({ HiddenLayers: [3] });
+
+const stats = net.train(trainingData);
+
+console.log(stats);
+
+console.log(net.run({ 'Maandag': 1}));
+
+function restaurantForDay(dayOfWeek){
+  const result = net.run({[dayOfWeek]: 1});
+  let highestValue = 0;
+  let highestRestaurantName= '';
+  for (let restourantName in result){
+    if (result[restourantName] > highestValue){
+      highestValue = result[restourantName];
+      highestRestaurantName = restourantName;
+    }
+  }
+  return highestRestaurantName;
+}
+
+console.log(restaurantForDay('Maandag'));
+console.log(restaurantForDay('Dinsdag'));
+console.log(restaurantForDay('Woensdag'));
+console.log(restaurantForDay('Donderdag'));
+console.log(restaurantForDay('Vrijdag'));
+console.log(restaurantForDay('Zaterdag'));
+console.log(restaurantForDay('Zondag'));
